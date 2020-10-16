@@ -9,7 +9,6 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 import time
-import pandas as pd
 
 start = time.time()
 
@@ -54,6 +53,7 @@ headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 # url = "https://www.lottehotel.com/global/ko.html"
 WEBSITE = "https://www.lottehotel.com/"
 
+#체인의 url을 언어별로 구하는 함수
 def get_site_urls(chain):
     hotel_code = str(chain)
     languages = get_site_language(chain)
@@ -70,33 +70,23 @@ def get_site_urls(chain):
 
 
 def get_product_info(product, bs_obj):
-    # number = 0
-    # for product in promotion_inside:
-    #     number += 1
 
     title = product.find("a", {"class": "promotion__title"})
 
 
     tagged_hotel = product.find("p", {"class": "promotion__hotel"})
     if (tagged_hotel != None):
+        # global이 아니면, 다른 호텔명태그에서 호텔명 추출함
         hotel = tagged_hotel
     else:
+        # Global이면 상품명에서 호텔명을 추출함
         hotel = bs_obj.find("h1", {"class": "hotel__name"})
-
-    # Global이면 상품명에서 호텔명을 추출하고
-        # if (chain in GLOBAL):
-    # hotel = product.find("p", {"class": "promotion__hotel"})
-        # else:
-        # # global이 아니면, 다른 호텔명태그에서 호텔명 추출한다
-        #     hotel = bs_obj.find("h1", {"class": "hotel__name"})
-
-
 
     return {"hotel":hotel.text, "title":title.text, "URL":title['href']}
 
 
 
-
+# 각 사이트에 게시된 프로모션의 리스트를 뽑는 함수
 def get_promotion_list(chain):
     print("체인 코드 :",chain)
 
@@ -132,10 +122,6 @@ def get_promotion_list(chain):
             check_numbers = 0
             signal = "CAROUSEL COMPONENT DELETED, EMERGENCY"
 
-
-
-
-
         print("프로모션 숫자 : ", check_numbers, "   "+signal)
 
     return
@@ -147,6 +133,7 @@ def get_promotion_list(chain):
 start_Datetime = datetime.datetime.now().strftime('%Y-%m-%d %A %H:%M:%S')
 print("조회시간 :",start_Datetime)  # 2015-04-19 12:11:32
 
+# 전체호텔 돌릴거니까 TOTAL_CHAINS
 for chain in TOTAL_CHAINS:
     print(get_promotion_list(chain))
     print("--------------------------------------")
@@ -158,7 +145,3 @@ print("완료시간 :",end_Datatime)  # 2015-04-19 12:11:32
 sec = time.time() - start
 crawling_times = str(datetime.timedelta(seconds=sec)).split(".")
 print("소요시간 :",sec)  # 2015-04-19 12:11:32
-
-# # print(get_promotion('global'))
-# print(get_product_info('mapo-city'))
-# print(get_product_info('global'))
