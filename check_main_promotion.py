@@ -68,7 +68,7 @@ def get_site_urls(chain):
 
 
 
-
+# 각 프로모션에 대한 정보를 뽑는 함수
 def get_product_info(product, bs_obj):
 
     title = product.find("a", {"class": "promotion__title"})
@@ -76,10 +76,10 @@ def get_product_info(product, bs_obj):
 
     tagged_hotel = product.find("p", {"class": "promotion__hotel"})
     if (tagged_hotel != None):
-        # global이 아니면, 다른 호텔명태그에서 호텔명 추출함
+        # Global이면 상품명에서 호텔명을 추출함
         hotel = tagged_hotel
     else:
-        # Global이면 상품명에서 호텔명을 추출함
+        # Global이 아니면, 다른 호텔명태그에서 호텔명 추출함
         hotel = bs_obj.find("h1", {"class": "hotel__name"})
 
     return {"hotel":hotel.text, "title":title.text, "URL":title['href']}
@@ -144,4 +144,4 @@ print("완료시간 :",end_Datatime)  # 2015-04-19 12:11:32
 
 sec = time.time() - start
 crawling_times = str(datetime.timedelta(seconds=sec)).split(".")
-print("소요시간 :",sec)  # 2015-04-19 12:11:32
+print("소요시간 :",crawling_times[0])  # 2015-04-19 12:11:32
