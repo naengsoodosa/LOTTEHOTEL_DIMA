@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import requests
+from bs4 import BeautifulSoup
+
+
+# In[2]:
+
+
+keyword="COVID19"
+url = "https://search.naver.com/search.naver?where=nexearch&sm=tab_htk.nws&ie=utf8&query="+keyword
+
+
+# In[3]:
+
+
+response = requests.get(url)
+
+
+# In[4]:
+
+
+soup = BeautifulSoup(response.text,'lxml')
+
+
+# In[5]:
+
+
+bs_obj = BeautifulSoup(response.content,"html.parser") 
+# soup와 bs_obj 결과는 같다
+
+
+# In[6]:
+
+
+news = soup.find('ul', 'list_news')
+# print(news.prettify())
+
+
+# In[7]:
+
+
+select_news=soup.select('ul.list_news li div div a.news_tit')
+print(select_news)
+
+
+# In[8]:
+
+
+for i in range(len(select_news)):
+    print(str(i+1)+")",select_news[i].text, select_news[i].attrs['href'])
+
